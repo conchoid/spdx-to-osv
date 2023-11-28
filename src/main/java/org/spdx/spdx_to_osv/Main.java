@@ -178,9 +178,6 @@ public class Main {
             if (Objects.nonNull(ex.getMessage())) {
                 System.err.println(ex.getMessage());
             }
-            if (Objects.nonNull(ex.getCause())) {
-                System.err.println(ex.getCause());
-            }
             usage(options);
             System.exit(ERROR_STATUS);
         }
