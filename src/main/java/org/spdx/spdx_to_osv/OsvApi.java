@@ -78,7 +78,6 @@ public class OsvApi {
         JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
         removePurlElements(jsonObject);
         jsonString = jsonObject.toString();
-        System.out.println(jsonString);
         byte[] json = jsonString.getBytes();
         int len = json.length;
         con.setRequestMethod("POST");
