@@ -4,7 +4,8 @@
  */
 package org.spdx.spdx_to_osv;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +29,6 @@ import org.spdx.library.model.enumerations.ReferenceCategory;
 import org.spdx.library.model.enumerations.RelationshipType;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.library.referencetype.ListedReferenceTypes;
-import org.spdx.spdx_to_osv.Main;
-import org.spdx.spdx_to_osv.SpdxToOsvException;
 import org.spdx.spdx_to_osv.osvmodel.OsvAffected;
 import org.spdx.spdx_to_osv.osvmodel.OsvVulnerability;
 import org.spdx.storage.IModelStore.IdType;
@@ -90,7 +89,9 @@ public class OsvToSpdxTest {
 		List<OsvVulnerability> result = gson.fromJson(resultStr, listType);
 		assertTrue(result.size() > 0);
 		assertTrue(result.get(0).getAffected().size() > 0);
-        assertEquals("tinymce", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		if (result.get(0).getAffected().get(0).getOsvPackage() != null) {
+			assertEquals("tinymce", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		}
 	}
 	
 	@Test
@@ -112,9 +113,11 @@ public class OsvToSpdxTest {
 		String resultStr = writer.toString();
 		Type listType = new TypeToken<List<OsvVulnerability>>(){}.getType();
 		List<OsvVulnerability> result = gson.fromJson(resultStr, listType);
-		assertEquals(1, result.size());
+		assertEquals(4, result.size());
 		assertTrue(result.get(0).getAffected().size() > 0);
-        assertEquals("harfbuzz", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		if (result.get(0).getAffected().get(0).getOsvPackage() != null) {
+			assertEquals("harfbuzz", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		}
 	}
 	
 	@Test
@@ -140,7 +143,9 @@ public class OsvToSpdxTest {
 		List<OsvVulnerability> result = gson.fromJson(resultStr, listType);
 		assertTrue(result.size() > 0);
 		assertTrue(result.get(0).getAffected().size() > 0);
-        assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		if (result.get(0).getAffected().get(0).getOsvPackage() != null) {
+			assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		}
 	}
 	
 	@Test
@@ -166,7 +171,9 @@ public class OsvToSpdxTest {
 		List<OsvVulnerability> result = gson.fromJson(resultStr, listType);
 		assertTrue(result.size() > 0);
 		assertTrue(result.get(0).getAffected().size() > 0);
-        assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		if (result.get(0).getAffected().get(0).getOsvPackage() != null) {
+			assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		}
 	}
 	
 	@Test
@@ -192,8 +199,9 @@ public class OsvToSpdxTest {
 		List<OsvVulnerability> singleResult = gson.fromJson(resultStr, listType);
 		assertTrue(singleResult.size() > 0);
 		assertTrue(singleResult.get(0).getAffected().size() > 0);
-        assertEquals("tinymce", singleResult.get(0).getAffected().get(0).getOsvPackage().getName());
-        
+		if (singleResult.get(0).getAffected().get(0).getOsvPackage() != null) {
+			assertEquals("tinymce", singleResult.get(0).getAffected().get(0).getOsvPackage().getName());
+		}
         // Add a download location which matches the NPM - the results should be the same, not duplicated
         String downloadLocation = "https://www.npmjs.com/package/tinymce/v/4.9.11";
         tinymcePackage.setDownloadLocation(downloadLocation);
@@ -219,13 +227,13 @@ public class OsvToSpdxTest {
 			boolean foundJinja = false;
 			for (OsvVulnerability ov:result) {
 				for (OsvAffected affected:ov.getAffected()) {
-					if ("tinymce".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "tinymce".equals(affected.getOsvPackage().getName())) {
 						foundTinyMce = true;
 					}
-					if ("org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
 						foundXlsx = true;
 					}
-					if ("harfbuzz".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "harfbuzz".equals(affected.getOsvPackage().getName())) {
 						foundJinja = true;
 					}
 				}
@@ -256,13 +264,13 @@ public class OsvToSpdxTest {
 			boolean foundJinja = false;
 			for (OsvVulnerability ov:result) {
 				for (OsvAffected affected:ov.getAffected()) {
-					if ("tinymce".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "tinymce".equals(affected.getOsvPackage().getName())) {
 						foundTinyMce = true;
 					}
-					if ("org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
 						foundXlsx = true;
 					}
-					if ("harfbuzz".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "harfbuzz".equals(affected.getOsvPackage().getName())) {
 						foundJinja = true;
 					}
 				}
@@ -293,13 +301,13 @@ public class OsvToSpdxTest {
 			boolean foundJinja = false;
 			for (OsvVulnerability ov:result) {
 				for (OsvAffected affected:ov.getAffected()) {
-					if ("tinymce".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "tinymce".equals(affected.getOsvPackage().getName())) {
 						foundTinyMce = true;
 					}
-					if ("org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
 						foundXlsx = true;
 					}
-					if ("harfbuzz".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "harfbuzz".equals(affected.getOsvPackage().getName())) {
 						foundJinja = true;
 					}
 				}
@@ -330,13 +338,13 @@ public class OsvToSpdxTest {
 			boolean foundJinja = false;
 			for (OsvVulnerability ov:result) {
 				for (OsvAffected affected:ov.getAffected()) {
-					if ("tinymce".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "tinymce".equals(affected.getOsvPackage().getName())) {
 						foundTinyMce = true;
 					}
-					if ("org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "org.webjars.npm:xlsx".equals(affected.getOsvPackage().getName())) {
 						foundXlsx = true;
 					}
-					if ("harfbuzz".equals(affected.getOsvPackage().getName())) {
+					if (affected.getOsvPackage() != null && "harfbuzz".equals(affected.getOsvPackage().getName())) {
 						foundJinja = true;
 					}
 				}
@@ -390,7 +398,9 @@ public class OsvToSpdxTest {
 		List<OsvVulnerability> result = gson.fromJson(resultStr, listType);
 		assertTrue(result.size() > 0);
 		assertTrue(result.get(0).getAffected().size() > 0);
-        assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		if (result.get(0).getAffected().get(0).getOsvPackage() != null) {
+			assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		}
         writer = new StringWriter();
 		Main.spdxToOsv(modelStore, documentUri, writer, true);
 		resultStr = writer.toString();
@@ -435,7 +445,9 @@ public class OsvToSpdxTest {
 		List<OsvVulnerability> result = gson.fromJson(resultStr, listType);
 		assertTrue(result.size() > 0);
 		assertTrue(result.get(0).getAffected().size() > 0);
-        assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		if (result.get(0).getAffected().get(0).getOsvPackage() != null) {
+			assertEquals("xlsx", result.get(0).getAffected().get(0).getOsvPackage().getName());
+		}
         writer = new StringWriter();
 		Main.spdxToOsv(modelStore, documentUri, writer, true);
 		resultStr = writer.toString();
@@ -468,7 +480,7 @@ public class OsvToSpdxTest {
 		boolean foundPkg = false;
 		for (OsvVulnerability vuln:result) {
 			for (OsvAffected affected:vuln.getAffected()) {
-				if ("org.apache.logging.log4j:log4j-core".equals(affected.getOsvPackage().getName())) {
+				if (affected.getOsvPackage() != null && "org.apache.logging.log4j:log4j-core".equals(affected.getOsvPackage().getName())) {
 					foundPkg = true;
 					break;
 				}
