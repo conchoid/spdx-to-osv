@@ -23,6 +23,9 @@ import org.spdx.spdx_to_osv.osvmodel.OsvVulnerabilityResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Singleton class for the OSV REST API
@@ -52,6 +55,14 @@ public class OsvApi {
         return _instance;
     }
 
+    private static void removePurlElements(JsonObject jsonObject) {
+        JsonElement packageElement = jsonObject.get("package");
+        if (packageElement != null && packageElement.isJsonObject()) {
+            JsonObject packageObject = packageElement.getAsJsonObject();
+            packageObject.remove("purl");
+        }
+    }
+
     /**
      * Calls the QueryVulnerabilities API to obtain vulnerability information from OSV
      * @param packageNameVersion The package name and version object to pass to the OSV API
@@ -62,7 +73,12 @@ public class OsvApi {
     public List<OsvVulnerability> queryVulnerabilities(OsvVulnerabilityRequest packageNameVersion) throws IOException, SpdxToOsvException {
         HttpURLConnection con = (HttpURLConnection)(apiUrl.openConnection());
         String pkgNameVersionJson = GSON.toJson(packageNameVersion);
-        byte[] json = pkgNameVersionJson.getBytes(StandardCharsets.UTF_8);
+        byte[] tmpJSON = pkgNameVersionJson.getBytes(StandardCharsets.UTF_8);
+        String jsonString = new String(tmpJSON, "UTF-8");
+        JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
+        removePurlElements(jsonObject);
+        jsonString = jsonObject.toString();
+        byte[] json = jsonString.getBytes();
         int len = json.length;
         con.setRequestMethod("POST");
         con.setFixedLengthStreamingMode(len);
@@ -78,7 +94,7 @@ public class OsvApi {
 	        }
 	        String response;
 	        try(BufferedReader reader = new BufferedReader(
-	                new InputStreamReader(con.getInputStream(),StandardCharsets.UTF_8))) {
+	            new InputStreamReader(con.getInputStream(),StandardCharsets.UTF_8))) {
 	            StringBuilder sb = new StringBuilder();
 	            String line = null;
 	            while ((line = reader.readLine()) != null) {
