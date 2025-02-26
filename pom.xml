@@ -188,12 +188,15 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-javadoc-plugin</artifactId>
-			<version>2.9</version>
+			<version>3.5.0</version>
 			<configuration>
+				<failOnError>false</failOnError><!-- JavaDoc のエラーを無視 -->
 				<quiet>true</quiet>
 				<source>8</source>
 				<javadocExecutable>${env.JAVA_HOME}/bin/javadoc</javadocExecutable>
-				<additionalparam>-Xdoclint:none</additionalparam>
+				<additionalJOptions>
+					<additionalJOption>-Xdoclint:none</additionalJOption>
+				</additionalJOptions>
 			</configuration>
 			<executions>
 				<execution>
